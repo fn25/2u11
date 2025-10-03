@@ -75,7 +75,39 @@ app.get('/teams',async (req,res)=>{
     }
 })
 app.post("/teams",async (req,res)=>{
-    // try{
-    //     const {team_id,team_name,}
-    // }
+    try{
+        const {team_name,club_id,caoch_name}=req.body
+        if(club_id){
+            const qiy=await pool.query(s=`select 1 from football_clubs where club_id=$1`,[club_id])
+            if(qiy.rowCount==0){
+                return res.status(404).json({message:"Kirirlgan id xatoligi"})
+            }
+        }
+        const q=`insert into teams values($1,$2,$3) returning *`
+        const {data}=await pool.query(q,[team_name,club_id || null ,caoch_name]);
+        
+        res.status(201).json()
+    }catch(err){
+        res.status(500).json({error: err.message})
+    }
+})
+app.get("/tournament_groups",async (req,res)=>{
+    try{
+        const t=`select * from tournament_groups`
+        const data=await pool.query(t)
+        res.json(data)
+    }catch(err){
+        res.status(500).json({error:"Xatolik"})
+    }
+})
+app.post("/tournament_groups",async(req,res)=>{
+    try{
+        const {group_name,tournament_id,created_at}=req.body
+        if(tournament_id){
+            const tr=`select * from tournaments where `
+        }
+        const {data}=await pool.query('Select * from tournament_groups')
+    }catch(err){
+        res.status
+    }
 })
